@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوابة الذكاء | دليلك لأكثر من 120 أداة AI مجانية</title>
+<style>
+/* ============================================================
+   1) نظام الألوان — تغيير أي لون من هنا يغيّر الموقع كله
+   ============================================================ */
+:root{
+  --bg:#080a12;            /* لون خلفية الموقع الرئيسي (كحلي غامق جدًا) */
+  --bg2:#0e1220;           /* خلفية ثانوية أفتح درجة */
+  --card:#12172a;          /* لون البطاقات */
+  --card2:#1a2138;         /* لون العناصر الداخلية داخل البطاقات */
+  --line:rgba(148,163,255,.14); /* لون الحدود الخفيفة */
+  --txt:#eef1fa;           /* لون النصوص الرئيسية */
+  --muted:#94a0c4;         /* لون النصوص الثانوية */
+  --p1:#6d5cff;            /* بنفسجي — اللون الأساسي الأول */
+  --p2:#22d3ee;            /* سماوي — اللون الأساسي الثاني */
+  --p3:#f472b6;            /* وردي — لون مكمل للتدرجات */
+  --green:#34d399;         /* أخضر — علامة "مجاني بالكامل" */
+  --amber:#fbbf24;         /* برتقالي — علامة "خطة مجانية" */
+  --grad:linear-gradient(90deg,var(--p1),var(--p2)); /* التدرج الأساسي */
+}
+
+/* ============================================================
+   2) تصفير المتصفحات — إعدادات عامة تنطبق على كل العناصر
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth} /* تنقّل سلس عند الضغط على الروابط الداخلية */
+body{
+  font-family:"Segoe UI",Tahoma,"Noto Kufi Arabic",Arial,sans-serif;
+  background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}      /* إزالة خط التسطير من الروابط */
+::selection{background:var(--p1);color:#fff} /* لون التحديد عند تحديد نص */
+::-webkit-scrollbar{width:10px;height:8px}  /* شكل شريط التمرير الجانبي */
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#2a3355;border-radius:8px}
+
+/* ============================================================
+   3) توهجات الخلفية — دوائر ضبابية ملوّنة خلف المحتوى
+   ============================================================ */
+.glow{position:fixed;border-radius:50%;filter:blur(120px);opacity:.3;z-index:0;pointer-events:none}
+.g1{width:520px;height:520px;background:#5b3df5;top:-170px;right:-130px}
+.g2{width:420px;height:420px;background:#0ea5b7;bottom:-140px;left:-110px}
+.g3{width:320px;height:320px;background:#f43f8e;top:42%;left:32%;opacity:.13}
+
+/* ============================================================
+   4) شريط التنقل العلوي — ثابت أثناء التمرير مع تأثير زجاجي
+   ============================================================ */
+header{
+  position:sticky;top:0;z-index:100;              /* يثبت في الأعلى دائمًا */
+  backdrop-filter:blur(16px);                       /* تأثير ضبابي زجاجي */
+  background:rgba(8,10,18,.78);
+  border-bottom:1px solid var(--line);
+}
+.hwrap{
+  max-width:1280px;margin:auto;display:flex;align-items:center;
+  gap:14px;padding:12px 20px;flex-wrap:wrap;      /* يلف العناصر على الشاشات الصغيرة */
+}
+
+/* 4أ) الشعار */
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;cursor:pointer;flex-shrink:0}
+.logo .chip{
+  width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;
+  background:linear-gradient(135deg,var(--p1),var(--p2));
+  box-shadow:0 0 24px rgba(109,92,255,.55);         /* توهج حول الشعار */
+}
+.logo span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* 4ب) مربع البحث السريع داخل الشريط العلوي */
+.nav-search{flex:1;min-width:180px;max-width:420px;position:relative}
+.nav-search input{
+  width:100%;padding:10px 42px 10px 14px;border-radius:12px;
+  border:1px solid var(--line);background:rgba(255,255,255,.04);
+  color:var(--txt);font-size:14px;font-family:inherit;outline:none;transition:.2s;
+}
+.nav-search input:focus{border-color:var(--p1);box-shadow:0 0 0 4px rgba(109,92,255,.18);background:rgba(255,255,255,.07)}
+.nav-search .ic{position:absolute;top:50%;right:14px;transform:translateY(-50%);opacity:.55;font-size:15px;pointer-events:none}
+
+/* 4ج) أزرار المفضلة والعشوائي */
+.nav-actions{display:flex;gap:8px;flex-shrink:0}
+.icon-btn{
+  position:relative;border:1px solid var(--line);background:rgba(255,255,255,.04);
+  color:var(--muted);width:42px;height:42px;border-radius:12px;cursor:pointer;
+  font-size:17px;transition:.2s;display:grid;place-items:center;
+}
+.icon-btn:hover{color:var(--txt);border-color:var(--p1);transform:translateY(-2px)}
+.icon-btn.on{color:var(--p3);border-color:rgba(244,114,182,.5);background:rgba(244,114,182,.1)}
+.icon-btn .cnt{ /* عدّاد صغير فوق زر المفضلة */
+  position:absolute;top:-7px;left:-7px;min-width:18px;height:18px;padding:0 4px;
+  border-radius:99px;background:var(--grad);color:#fff;font-size:11px;font-weight:800;
+  display:grid;place-items:center;
+}
+
+/* 4د) شريط الأقسام السريعة — قابل للتمرير أفقيًا */
+.cat-bar{
+  max-width:1280px;margin:auto;padding:0 20px 12px;display:flex;gap:8px;overflow-x:auto;
+  scrollbar-width:none; /* إخفاء شريط التمرير في فايرفوكس */
+}
+.cat-bar::-webkit-scrollbar{display:none} /* إخفاء شريط التمرير في كروم */
+.pill{
+  flex-shrink:0;border:1px solid var(--line);background:rgba(255,255,255,.03);
+  color:var(--muted);padding:8px 16px;border-radius:99px;cursor:pointer;
+  font-size:13px;font-family:inherit;transition:.2s;white-space:nowrap;
+}
+.pill:hover{color:var(--txt);border-color:var(--p1);transform:translateY(-2px)}
+.pill.on{ /* القسم النشط حاليًا */
+  background:var(--grad);color:#fff;border-color:transparent;font-weight:700;
+  box-shadow:0 6px 18px rgba(109,92,255,.4);
+}
+
+/* ============================================================
+   5) قسم الترحيب (Hero) — العنوان الكبير والإحصائيات
+   ============================================================ */
+.hero{max-width:1200px;margin:auto;padding:64px 20px 36px;text-align:center;position:relative;z-index:1}
+.badge{
+  display:inline-block;padding:7px 16px;border:1px solid var(--line);border-radius:99px;
+  background:var(--card);color:var(--muted);font-size:13px;margin-bottom:22px;
+}
+.badge b{color:var(--green)}
+h1{font-size:clamp(30px,5.5vw,56px);line-height:1.35;font-weight:900}
+h1 .grad{
+  background:linear-gradient(90deg,var(--p1),var(--p2),var(--p3)); /* تدرج ثلاثي للعنوان */
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.sub{color:var(--muted);font-size:clamp(14px,2vw,17px);margin:18px auto 30px;max-width:620px;line-height:1.9}
+
+/* مربع البحث الكبير في الصفحة الرئيسية */
+.searchbox{max-width:620px;margin:auto;position:relative}
+.searchbox input{
+  width:100%;padding:17px 54px 17px 20px;border-radius:16px;
+  border:1px solid var(--line);background:var(--card);color:var(--txt);
+  font-size:16px;font-family:inherit;outline:none;transition:.2s;
+}
+.searchbox input:focus{border-color:var(--p1);box-shadow:0 0 0 5px rgba(109,92,255,.16)}
+.searchbox .ic{position:absolute;top:50%;right:20px;transform:translateY(-50%);font-size:18px;opacity:.55;pointer-events:none}
+
+/* شريط الإحصائيات تحت البحث */
+.stats{display:flex;justify-content:center;gap:44px;margin-top:36px;flex-wrap:wrap}
+.stat b{
+  font-size:28px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.stat div{color:var(--muted);font-size:13px;margin-top:4px}
+
+/* ============================================================
+   6) الحاويات والعناوين الرئيسية لكل قسم
+   ============================================================ */
+.wrap{max-width:1280px;margin:auto;padding:26px 20px 70px;position:relative;z-index:1}
+.sec-title{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.sec-title h2{font-size:26px;font-weight:800}
+.sec-title .cnt{
+  background:var(--card2);border:1px solid var(--line);padding:4px 12px;border-radius:99px;
+  font-size:13px;color:var(--muted);
+}
+.sec-sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+
+/* ============================================================
+   7) شبكة الأقسام — بطاقة لكل فئة أدوات
+   ============================================================ */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px}
+.cat{
+  background:linear-gradient(160deg,var(--card),var(--bg2));
+  border:1px solid var(--line);border-radius:20px;padding:24px;cursor:pointer;
+  transition:.25s;position:relative;overflow:hidden;
+}
+.cat::after{ /* توهج يظهر عند التمرير بالماوس أعلى البطاقة */
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(400px 140px at 85% -20%,rgba(109,92,255,.2),transparent);
+  opacity:0;transition:.25s;
+}
+.cat:hover{transform:translateY(-6px);border-color:var(--p1);box-shadow:0 20px 44px rgba(0,0,0,.45)}
+.cat:hover::after{opacity:1}
+.cat .ic{
+  width:54px;height:54px;border-radius:14px;display:grid;place-items:center;font-size:25px;margin-bottom:14px;
+  background:var(--card2);border:1px solid var(--line);
+}
+.cat h3{font-size:18px;margin-bottom:6px}
+.cat p{color:var(--muted);font-size:13px;line-height:1.7;min-height:44px}
+.cat .meta{display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:12px;color:var(--muted)}
+.cat .meta .go{color:var(--p2);font-weight:700}
+
+/* ============================================================
+   8) شريط الأدوات العلوي — رجوع + بحث + فلاتر التصنيف
+   ============================================================ */
+.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
+.backbtn{
+  background:var(--card);border:1px solid var(--line);color:var(--txt);padding:10px 18px;
+  border-radius:12px;cursor:pointer;font-family:inherit;font-size:14px;transition:.2s;flex-shrink:0;
+}
+.backbtn:hover{border-color:var(--p1);color:var(--p2)}
+.toolbar input{
+  flex:1;min-width:180px;padding:11px 16px;border-radius:12px;border:1px solid var(--line);
+  background:var(--card);color:var(--txt);font-family:inherit;font-size:14px;outline:none;transition:.2s;
+}
+.toolbar input:focus{border-color:var(--p1);box-shadow:0 0 0 4px rgba(109,92,255,.15)}
+/* فلاتر: الكل / مجاني بالكامل */
+.filters{display:flex;gap:8px}
+.fbtn{
+  border:1px solid var(--line);background:transparent;color:var(--muted);padding:8px 14px;
+  border-radius:99px;cursor:pointer;font-size:13px;font-family:inherit;transition:.2s;
+}
+.fbtn.on{background:var(--grad);color:#fff;border-color:transparent;font-weight:700}
+
+/* ============================================================
+   9) شبكة الأدوات — البطاقة الأساسية للأداة الواحدة
+   ============================================================ */
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.tool{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;
+  display:flex;flex-direction:column;gap:10px;transition:.22s;position:relative;
+}
+.tool:hover{transform:translateY(-5px);border-color:#3a4470;box-shadow:0 16px 34px rgba(0,0,0,.4)}
+.tool .top{display:flex;align-items:flex-start;gap:12px}
+/* صندوق أيقونة الموقع الأصلية (favicon) */
+.logo-box{
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;background:#fff;display:grid;place-items:center;
+  border:1px solid #e5e8f2;box-shadow:0 4px 14px rgba(0,0,0,.35);transition:.25s;overflow:hidden;
+}
+.logo-box img{width:32px;height:32px;object-fit:contain}
+.tool:hover .logo-box{transform:scale(1.08) rotate(-3deg);box-shadow:0 8px 22px rgba(109,92,255,.4)}
+/* بديل احتياطي لو الأيقونة ما اتحملت: حرف أول اسم الأداة بألوان متدرجة */
+.avatar{
+  width:46px;height:46px;border-radius:13px;flex-shrink:0;display:grid;place-items:center;
+  font-size:21px;font-weight:800;background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;
+}
+.tool h4{font-size:16px}
+.tool .catline{font-size:11px;color:var(--muted)}
+.tool p{color:var(--muted);font-size:13px;line-height:1.75;flex:1}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:4px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.tag.free{color:var(--green);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08)}
+.tag.part{color:var(--amber);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+
+/* صف الأزرار أسفل البطاقة: زيارة + مفضلة */
+.tool .actions{display:flex;gap:8px;margin-top:4px}
+.visit{
+  flex:1;text-align:center;padding:10px;border-radius:11px;background:var(--grad);
+  color:#fff;font-size:13px;font-weight:700;transition:.2s;
+}
+.visit:hover{filter:brightness(1.18);transform:translateY(-1px)}
+.fav{
+  width:42px;border:1px solid var(--line);background:var(--card2);border-radius:11px;cursor:pointer;
+  font-size:16px;transition:.2s;color:var(--muted);
+}
+.fav.on{color:#f472b6;border-color:rgba(244,114,182,.5);background:rgba(244,114,182,.12)}
+.empty{text-align:center;color:var(--muted);padding:60px 0;grid-column:1/-1;font-size:15px}
+
+/* ============================================================
+   10) التذييل وزر العودة لأعلى الصفحة
+   ============================================================ */
+footer{border-top:1px solid var(--line);padding:30px 20px;text-align:center;color:var(--muted);font-size:13px;position:relative;z-index:1}
+.toTop{
+  position:fixed;bottom:24px;left:24px;width:46px;height:46px;border-radius:50%;
+  border:1px solid var(--line);background:var(--card2);color:var(--txt);cursor:pointer;
+  font-size:18px;z-index:90;display:none;box-shadow:0 8px 24px rgba(0,0,0,.45);transition:.2s;
+}
+.toTop.show{display:block}
+.toTop:hover{border-color:var(--p1);transform:translateY(-3px)}
+
+/* ============================================================
+   11) التجاوب مع الجوال — تعديلات للشاشات الصغيرة
+   ============================================================ */
+@media(max-width:768px){
+  .nav-search{order:3;max-width:none;flex-basis:100%} /* البحث ينزل سطر كامل */
+  .stats{gap:26px}
+}
+</style>
+</head>
+<body>
+<!-- توهجات الخلفية الزخرفية -->
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+
+<!-- ============================================================
+     شريط التنقل العلوي — الشعار + بحث سريع + مفضلة + عشوائي
+     ============================================================ -->
+<header>
+  <div class="hwrap">
+    <div class="logo" onclick="goHome()" title="الرئيسية">
+      <div class="chip">🧠</div>
+      <div>بوابة <span>الذكاء</span></div>
+    </div>
+    <!-- بحث سريع يشتغل من أي مكان في الموقع -->
+    <div class="nav-search">
+      <input id="navSearch" type="text" placeholder="🔍 ابحث في كل الأدوات...">
+      <span class="ic">⌕</span>
+    </div>
+    <div class="nav-actions">
+      <!-- زر العشوائي -->
+      <button class="icon-btn" onclick="randomTool()" title="أداة عشوائية">🎲</button>
+      <!-- زر المفضلة مع عدّاد بعدد الأدوات المحفوظة -->
+      <button class="icon-btn" id="navFav" onclick="showView('fav')" title="المفضلة">
+        ❤️<span class="cnt" id="favBadge">0</span>
+      </button>
+    </div>
+  </div>
+  <!-- شريط الأقسام السريعة — يتولّد تلقائيًا من البيانات -->
+  <nav class="cat-bar" id="catBar"></nav>
+</header>
+
+<!-- ============ الصفحة الرئيسية ============ -->
+<section id="view-home">
+  <div class="hero">
+    <div class="badge">🔥 أكثر من <b id="totalTools">120</b> أداة ذكاء اصطناعي في مكان واحد</div>
+    <h1>كل أدوات <span class="grad">الذكاء الاصطناعي</span><br>في بوابة واحدة</h1>
+    <p class="sub">دوّن على الأداة اللي محتاجها: أنشئ صور، فيديوهات، نصوص، موسيقى، أكواد برمجة وعروض تقديمية — كلها بضغطة واحدة.</p>
+    <div class="searchbox">
+      <input id="globalSearch" type="text" placeholder="🔍 ابحث عن أي أداة... (مثال: صور، فيديو، صوت)">
+      <span class="ic">⌕</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="stTools">0</b><div>أداة ذكية</div></div>
+      <div class="stat"><b id="stCats">0</b><div>قسم مختلف</div></div>
+      <div class="stat"><b>100%</b><div>مجانية للاستخدام</div></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="sec-title"><h2>اختار القسم</h2><span class="cnt" id="catCount"></span></div>
+    <div class="sec-sub">اضغط على أي قسم لعرض كل الأدوات الخاصة بيه — أو استخدم شريط الأقسام فوق مباشرة</div>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+
+  <!-- نتائج البحث — تظهر فقط عند الكتابة في مربع البحث -->
+  <div class="wrap" id="searchResults" style="display:none">
+    <div class="sec-title"><h2>🔍 نتائج البحث</h2><span class="cnt" id="searchCount"></span></div>
+    <div class="sec-sub">اضغط على "زيارة الموقع" للانتقال للأداة</div>
+    <div class="tool-grid" id="searchGrid"></div>
+  </div>
+</section>
+
+<!-- ============ صفحة القسم الواحد ============ -->
+<section id="view-cat" style="display:none">
+  <div class="wrap">
+    <div class="toolbar">
+      <button class="backbtn" onclick="goHome()">→ رجوع للأقسام</button>
+      <input id="catSearch" type="text" placeholder="🔍 ابحث داخل القسم...">
+      <!-- فلاتر التصنيف داخل القسم -->
+      <div class="filters">
+        <button class="fbtn on" data-f="all" onclick="setFilter('all',this)">الكل</button>
+        <button class="fbtn" data-f="free" onclick="setFilter('free',this)">✓ مجاني بالكامل</button>
+      </div>
+    </div>
+    <div class="sec-title"><h2 id="catTitle"></h2><span class="cnt" id="catCnt"></span></div>
+    <div class="sec-sub" id="catDesc"></div>
+    <div class="tool-grid" id="catGrid"></div>
+  </div>
+</section>
+
+<!-- ============ صفحة المفضلة ============ -->
+<section id="view-fav" style="display:none">
+  <div class="wrap">
+    <div class="toolbar">
+      <button class="backbtn" onclick="goHome()">→ رجوع للأقسام</button>
+    </div>
+    <div class="sec-title"><h2>❤️ أدواتك المفضلة</h2><span class="cnt" id="favCnt"></span></div>
+    <div class="sec-sub">الأدوات اللي ضفتها للمفضلة بتتخزن على جهازك تلقائيًا</div>
+    <div class="tool-grid" id="favGrid"></div>
+  </div>
+</section>
+
+<footer>🧠 بوابة الذكاء — دليلك الشامل لأدوات الذكاء الاصطناعي المجانية · اضغط على ❤️ لحفظ أدواتك المفضلة</footer>
+<button class="toTop" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="العودة للأعلى">↑</button>
+
+<script>
+/* ================================================================
+   البيانات — الأقسام والأدوات
+   ================================================================ */
+/* الأقسام: كل قسم له مفتاح (key) واسم وأيقونة ووصف */
+const CATS = {
+  chat:  {name:"محادثة ومساعدات", icon:"💬", desc:"شات بوتات ومساعدات ذكية للإجابة على أسئلتك ومساعدتك في يومك"},
+  text:  {name:"كتابة ونصوص", icon:"✍️", desc:"أدوات تحسين الكتابة، تدقيق إملائي، وإنشاء محتوى نصي احترافي"},
+  image: {name:"إنشاء وتعديل صور", icon:"🎨", desc:"حوّل كلماتك لصور مذهلة أو عدّل وحسّن صورك بذكاء"},
+  video: {name:"إنشاء فيديوهات", icon:"🎬", desc:"أنشئ فيديوهات من النص أو الصورة بجودة سينمائية"},
+  audio: {name:"صوت وموسيقى", icon:"🎵", desc:"أصوات واقعية، تعليق صوتي، وأغانٍ كاملة بالذكاء الاصطناعي"},
+  code:  {name:"برمجة وأكواد", icon:"💻", desc:"ساعدك تكتب وتصحح الأكواد وتبني مواقع كاملة بالـ AI"},
+  docs:  {name:"مستندات وعروض", icon:"📄", desc:"ملخصات PDF، عروض تقديمية، وأبحاث في ثوانٍ"},
+  design:{name:"تصميم ومواقع", icon:"🖌️", desc:"شعارات، واجهات، ومواقع جاهزة بدون خبرة برمجية"},
+  av3d:  {name:"أفاتار و3D", icon:"🧍", desc:"شخصيات افتراضية، فيديو بالأفاتار، ونماذج ثلاثية الأبعاد"},
+};
+
+/* الأدوات:
+   n = الاسم | d = الوصف | u = رابط الموقع | c = القسم | f = نوع المجانية
+   f:1 = مجاني بالكامل  |  f:0 = خطة مجانية (Freemium) */
+const TOOLS = [
+ // ---- 💬 محادثة ومساعدات ----
+ {n:"ChatGPT", d:"أشهر مساعد ذكي للمحادثة والكتابة والتحليل من OpenAI", u:"https://chatgpt.com", c:"chat", f:0},
+ {n:"Claude", d:"مساعد ذكي قوي جدًا في الكتابة الطويلة والتحليل العميق", u:"https://claude.ai", c:"chat", f:0},
+ {n:"Google Gemini", d:"مساعد جوجل المتكامل مع بحث جوجل وخدماتها", u:"https://gemini.google.com", c:"chat", f:0},
+ {n:"Grok", d:"شات بوت xAI بأسلوب مباشر وردود بدون رقابة", u:"https://grok.com", c:"chat", f:0},
+ {n:"DeepSeek", d:"نموذج صيني قوي ومفتوح المصدر ومجاني في الاستخدام", u:"https://chat.deepseek.com", c:"chat", f:1},
+ {n:"Le Chat (Mistral)", d:"شات بوت أوروبي سريع ومجاني من شركة Mistral", u:"https://chat.mistral.ai", c:"chat", f:1},
+ {n:"Perplexity", d:"محرك بحث ذكي يجيب بمصادر موثقة لحظيًا", u:"https://www.perplexity.ai", c:"chat", f:0},
+ {n:"Microsoft Copilot", d:"مساعد مايكروسوفت المجاني مبني على GPT-4", u:"https://copilot.microsoft.com", c:"chat", f:0},
+ {n:"Poe", d:"منصة تجمع GPT وClaude وGemini وأكثر في مكان واحد", u:"https://poe.com", c:"chat", f:0},
+ {n:"Character.AI", d:"شخصيات افتراضية للمحادثة في أي موضوع تتخيله", u:"https://character.ai", c:"chat", f:0},
+ {n:"HuggingChat", d:"شات بوت مجاني ومفتوح المصدر من Hugging Face", u:"https://huggingface.co/chat", c:"chat", f:1},
+ {n:"Kimi", d:"مساعد صيني ممتاز في قراءة الملفات الطويلة جدًا", u:"https://www.kimi.com", c:"chat", f:1},
+ {n:"Qwen Chat", d:"شات بوت مجاني من علي بابا بنموذج Qwen القوي", u:"https://chat.qwen.ai", c:"chat", f:1},
+ {n:"Pi", d:"مساعد شخصي ودود للمحادثات اليومية والدعم النفسي", u:"https://pi.ai", c:"chat", f:1},
+ {n:"You.com", d:"بحث ذكي بالإضافة لشات بوت وأدوات كتابة متعددة", u:"https://you.com", c:"chat", f:0},
+ // ---- ✍️ كتابة ونصوص ----
+ {n:"Grammarly", d:"تدقيق إملائي ونحوي لغوي احترافي للإنجليزية", u:"https://www.grammarly.com", c:"text", f:0},
+ {n:"QuillBot", d:"إعادة صياغة الجمل وتلخيص النصوص وتحسينها", u:"https://quillbot.com", c:"text", f:0},
+ {n:"Rytr", d:"كتابة محتوى تسويقي وسيو بأكثر من 30 لغة", u:"https://rytr.me", c:"text", f:0},
+ {n:"Copy.ai", d:"نصوص إعلانية ومحتوى تسويقي في ثوانٍ", u:"https://www.copy.ai", c:"text", f:0},
+ {n:"Writesonic", d:"كتابة مقالات ومحتوى كامل مع تحسين محركات البحث", u:"https://writesonic.com", c:"text", f:0},
+ {n:"Wordtune", d:"إعادة صياغة الجمل بأنماط كتابة مختلفة", u:"https://www.wordtune.com", c:"text", f:0},
+ {n:"HyperWrite", d:"مساعد كتابة ذكي يتعلم أسلوبك الخاص", u:"https://www.hyperwriteai.com", c:"text", f:0},
+ {n:"Jenni AI", d:"مساعد كتابة الأبحاث والأوراق العلمية", u:"https://jenni.ai", c:"text", f:0},
+ {n:"TextCortex", d:"كتابة وإبداع نصوص متكاملة مع ذاكرة شخصية", u:"https://textcortex.com", c:"text", f:0},
+ {n:"Sudowrite", d:"مساعد الكتابة الإبداعية والقصصية للأدباء", u:"https://www.sudowrite.com", c:"text", f:0},
+ // ---- 🎨 إنشاء وتعديل صور ----
+ {n:"Microsoft Designer", d:"إنشاء صور مجاني بالكامل من مايكروسوفت (Bing)", u:"https://designer.microsoft.com", c:"image", f:1},
+ {n:"Ideogram", d:"أفضل أداة لإنشاء صور تحتوي على نصوص وشعارات", u:"https://ideogram.ai", c:"image", f:0},
+ {n:"Leonardo AI", d:"توليد صور احترافية عالية الجودة بأنماط متعددة", u:"https://leonardo.ai", c:"image", f:0},
+ {n:"Playground", d:"إنشاء صور وتعديلها بواجهة سهلة ومجانية جزئيًا", u:"https://playground.com", c:"image", f:0},
+ {n:"Adobe Firefly", d:"توليد صور من أدوبي بتجربة مجانية يومية", u:"https://firefly.adobe.com", c:"image", f:0},
+ {n:"Recraft", d:"توليد صور وفيكتور وتصاميم قابلة للتعديل", u:"https://www.recraft.ai", c:"image", f:0},
+ {n:"Krea AI", d:"توليد صور لحظي أثناء الكتابة بجودة عالية", u:"https://www.krea.ai", c:"image", f:0},
+ {n:"getimg.ai", d:"توليد وتحرير صور بمحركات Stable Diffusion", u:"https://getimg.ai", c:"image", f:0},
+ {n:"NightCafe", d:"منصة توليد صور بعدة نماذج مع مجتمع نشط", u:"https://creator.nightcafe.studio", c:"image", f:0},
+ {n:"Mage.space", d:"توليد صور مجاني بدون تسجيل دخول", u:"https://www.mage.space", c:"image", f:1},
+ {n:"Craiyon", d:"تحويل النص لصورة مجاني تمامًا بدون تسجيل", u:"https://www.craiyon.com", c:"image", f:1},
+ {n:"Perchance AI", d:"مولد صور مجاني بالكامل بدون حدود وبدون حساب", u:"https://perchance.org/ai-text-to-image-generator", c:"image", f:1},
+ {n:"Pollinations.ai", d:"توليد صور مجاني مفتوح المصدر بدون قيود", u:"https://pollinations.ai", c:"image", f:1},
+ {n:"DeepAI", d:"توليد صور وأدوات ذكاء اصطناعي متنوعة مجانية", u:"https://deepai.org", c:"image", f:1},
+ {n:"Artbreeder", d:"دمج وتوليد وجوه وشخصيات فريدة", u:"https://www.artbreeder.com", c:"image", f:0},
+ {n:"Fotor", d:"تصميم وتعديل صور مع مولد AI مدمج", u:"https://www.fotor.com", c:"image", f:0},
+ {n:"Canva AI", d:"تصميمات جرافيك مع أدوات ذكاء اصطناعي متكاملة", u:"https://www.canva.com", c:"image", f:0},
+ {n:"remove.bg", d:"إزالة خلفية الصورة في 5 ثوانٍ مجانًا", u:"https://www.remove.bg", c:"image", f:1},
+ {n:"Clipdrop", d:"إزالة خلفيات وأشياء وتحسين الصور بالـ AI", u:"https://clipdrop.co", c:"image", f:0},
+ {n:"Upscale.media", d:"تحسين جودة الصور وتكبيرها بدون فقدان التفاصيل", u:"https://www.upscale.media", c:"image", f:1},
+ {n:"Lets Enhance", d:"رفع دقة الصور القديمة والضبابية", u:"https://letsenhance.io", c:"image", f:0},
+ {n:"Pixlr", d:"محرر صور أونلاين مع أدوات ذكاء اصطناعي", u:"https://pixlr.com", c:"image", f:0},
+ {n:"Hotpot.ai", d:"توليد صور وإزالة خلفيات وأدوات تصميم", u:"https://hotpot.ai", c:"image", f:0},
+ {n:"Dezgo", d:"توليد صور مجاني بالكامل بدون تسجيل", u:"https://dezgo.com", c:"image", f:1},
+ // ---- 🎬 إنشاء فيديوهات ----
+ {n:"Runway", d:"من أقوى أدوات توليد الفيديو بالذكاء الاصطناعي", u:"https://runwayml.com", c:"video", f:0},
+ {n:"Pika", d:"حوّل النص أو الصورة لفيديو بطريقة سهلة وممتعة", u:"https://pika.art", c:"video", f:0},
+ {n:"Luma Dream Machine", d:"فيديوهات واقعية مذهلة من النصوص والصور", u:"https://lumalabs.ai/dream-machine", c:"video", f:0},
+ {n:"Kling AI", d:"مولد فيديو صيني بجودة سينمائية عالية جدًا", u:"https://klingai.com", c:"video", f:0},
+ {n:"Hailuo AI (MiniMax)", d:"توليد فيديو سريع مع حركة كاميرا ذكية", u:"https://hailuoai.video", c:"video", f:0},
+ {n:"PixVerse", d:"فيديوهات قصيرة جذابة مع تأثيرات خاصة", u:"https://pixverse.ai", c:"video", f:0},
+ {n:"Vidu AI", d:"توليد فيديو سريع بدقة عالية من الصور", u:"https://www.vidu.com", c:"video", f:0},
+ {n:"Haiper", d:"توليد فيديو مجاني جزئيًا بواجهة بسيطة", u:"https://haiper.ai", c:"video", f:0},
+ {n:"Genmo", d:"محرك فيديو مفتوح المصدر (Mochi) مجاني", u:"https://www.genmo.ai", c:"video", f:1},
+ {n:"Kaiber", d:"فيديوهات فنية متحركة بأسلوب فني مميز", u:"https://kaiber.ai", c:"video", f:0},
+ {n:"InVideo AI", d:"أنشئ فيديو كامل بالنص فقط مع تعليق صوتي", u:"https://invideo.io", c:"video", f:0},
+ {n:"Fliki", d:"حوّل النص لفيديو بأصوات واقعية ومشاهد", u:"https://fliki.ai", c:"video", f:0},
+ {n:"Pictory", d:"حوّل المقالات والسكريبتات لفيديوهات جاهزة", u:"https://pictory.ai", c:"video", f:0},
+ {n:"Lumen5", d:"تحويل المدونات والمقالات لفيديوهات تسويقية", u:"https://lumen5.com", c:"video", f:0},
+ {n:"Vidnoz", d:"فيديوهات بالأفاتار وإضافات مجانية سخية", u:"https://www.vidnoz.com", c:"video", f:0},
+ {n:"CapCut", d:"مونتاج فيديو ذكي مجاني مع ميزات AI متكاملة", u:"https://www.capcut.com", c:"video", f:1},
+ {n:"Clipchamp", d:"مونتاج فيديو مجاني من مايكروسوفت مع أدوات AI", u:"https://clipchamp.com", c:"video", f:1},
+ {n:"Veed.io", d:"مونتاج وفيديو بالنص أونلاين بدون خبرة", u:"https://www.veed.io", c:"video", f:0},
+ {n:"Zebracat", d:"فيديوهات تسويقية من نص أو رابط بضغطة واحدة", u:"https://zebracat.ai", c:"video", f:0},
+ {n:"Steve.ai", d:"فيديوهات أنيميشن ورسوم متحركة ذكية", u:"https://www.steve.ai", c:"video", f:0},
+ // ---- 🎵 صوت وموسيقى ----
+ {n:"ElevenLabs", d:"أفضل أداة أصوات واقعية وتعليق صوتي بالعربية", u:"https://elevenlabs.io", c:"audio", f:0},
+ {n:"TTSMaker", d:"تحويل النص لصوت مجاني بالكامل بأصوات متعددة", u:"https://ttsmaker.com", c:"audio", f:1},
+ {n:"Suno", d:"إنشاء أغانٍ كاملة بالكلمات والموسيقى من نص", u:"https://suno.com", c:"audio", f:0},
+ {n:"Udio", d:"منافس Suno في توليد الموسيقى والأغاني", u:"https://www.udio.com", c:"audio", f:0},
+ {n:"Murf AI", d:"تعليق صوتي احترافي لعروضك وفيديوهاتك", u:"https://murf.ai", c:"audio", f:0},
+ {n:"Play.ht", d:"أصوات واقعية بـ 140 لغة مع استنساخ الصوت", u:"https://play.ht", c:"audio", f:0},
+ {n:"Speechify", d:"حوّل أي نص لكتاب صوتي بصوت طبيعي", u:"https://speechify.com", c:"audio", f:0},
+ {n:"Kits.AI", d:"أدوات صوتية للموسيقيين واستنساخ الأصوات", u:"https://kits.ai", c:"audio", f:0},
+ {n:"AIVA", d:"تأليف موسيقى سينمائية كلاسيكية بالذكاء الاصطناعي", u:"https://www.aiva.ai", c:"audio", f:0},
+ {n:"Soundraw", d:"توليد موسيقى خلفية مخصصة لمشاريعك", u:"https://soundraw.io", c:"audio", f:0},
+ {n:"Mubert", d:"موسيقى إلكترونية مولدة بالكامل بالـ AI", u:"https://mubert.com", c:"audio", f:0},
+ {n:"Beatoven.ai", d:"موسيقى خلفية لمقاطعك بدون حقوق ملكية", u:"https://www.beatoven.ai", c:"audio", f:0},
+ {n:"Uberduck", d:"أصوات مجانية واستنساخ أصوات شخصيات", u:"https://uberduck.ai", c:"audio", f:0},
+ {n:"FakeYou", d:"أصوات مشاهير وشخصيات كرتونية للمرح", u:"https://fakeyou.com", c:"audio", f:0},
+ {n:"Stable Audio", d:"توليد مؤثرات صوتية وموسيقى من Stability AI", u:"https://stableaudio.com", c:"audio", f:0},
+ {n:"Voicemod", d:"تغيير صوتك في البثوث والمكالمات لحظيًا", u:"https://www.voicemod.net", c:"audio", f:0},
+ // ---- 💻 برمجة وأكواد ----
+ {n:"GitHub Copilot", d:"مساعد البرمجة الأشهر داخل VS Code", u:"https://github.com/features/copilot", c:"code", f:0},
+ {n:"Codeium", d:"إكمال أكواد مجاني بالكامل ومنافس قوي لـ Copilot", u:"https://codeium.com", c:"code", f:1},
+ {n:"Windsurf", d:"محرر أكواد ذكي من Codeium بفهم السياق الكامل", u:"https://windsurf.com", c:"code", f:1},
+ {n:"Cursor", d:"محرر أكواد مبني على الذكاء الاصطناعي بامتياز", u:"https://cursor.com", c:"code", f:0},
+ {n:"Replit", d:"برمجة ونشر تطبيقات كاملة من المتصفح", u:"https://replit.com", c:"code", f:0},
+ {n:"Blackbox AI", d:"شرح وكتابة الأكواد مع محرر أونلاين", u:"https://www.blackbox.ai", c:"code", f:0},
+ {n:"Phind", d:"محرك بحث للمطورين يجيب بأكواد جاهزة", u:"https://www.phind.com", c:"code", f:0},
+ {n:"v0 by Vercel", d:"بناء واجهات مواقع جاهزة من وصف نصي", u:"https://v0.dev", c:"code", f:0},
+ {n:"Bolt.new", d:"بناء تطبيقات ومواقع كاملة من المتصفح بالكلام", u:"https://bolt.new", c:"code", f:0},
+ {n:"Lovable", d:"حوّل فكرتك لتطبيق ويب جاهز بالكامل", u:"https://lovable.dev", c:"code", f:0},
+ {n:"Trae", d:"محرر أكواد ذكي مجاني من ByteDance", u:"https://www.trae.ai", c:"code", f:1},
+ {n:"CodeGeeX", d:"مساعد برمجة مجاني متعدد اللغات", u:"https://codegeex.cn", c:"code", f:1},
+ // ---- 📄 مستندات وعروض ----
+ {n:"Gamma", d:"عروض تقديمية وجداول ومستندات بتصميم فاخر من نص", u:"https://gamma.app", c:"docs", f:0},
+ {n:"NotebookLM", d:"رفع ملفاتك واسألها — بحث وملخصات من جوجل", u:"https://notebooklm.google.com", c:"docs", f:1},
+ {n:"ChatPDF", d:"اسأل أي ملف PDF وسيجيبك بدقة", u:"https://www.chatpdf.com", c:"docs", f:0},
+ {n:"SciSpace", d:"فهم الأوراق العلمية والأبحاث المعقدة بسهولة", u:"https://scispace.com", c:"docs", f:0},
+ {n:"Elicit", d:"بحث علمي ذكي يستخرج النتائج من الأوراق", u:"https://elicit.com", c:"docs", f:0},
+ {n:"Consensus", d:"الإجابة على أسئلتك من الأبحاث العلمية الموثقة", u:"https://consensus.app", c:"docs", f:0},
+ {n:"Humata", d:"محادثة ملفاتك PDF والاستفادة منها بسرعة", u:"https://www.humata.ai", c:"docs", f:0},
+ {n:"ChatDOC", d:"محادثة مستنداتك Word وPDF بذكاء", u:"https://chatdoc.com", c:"docs", f:0},
+ {n:"SlidesAI", d:"تحويل النص لعرض تقديمي كامل داخل Google Slides", u:"https://www.slidesai.io", c:"docs", f:0},
+ {n:"Beautiful.ai", d:"عروض تقديمية بتصميمات احترافية تلقائية", u:"https://www.beautiful.ai", c:"docs", f:0},
+ {n:"Otter.ai", d:"تفريغ صوتي ذكي للاجتماعات والمحاضرات", u:"https://otter.ai", c:"docs", f:0},
+ {n:"Notta", d:"تحويل الصوت لنص مع دعم العربية", u:"https://www.notta.ai", c:"docs", f:0},
+ // ---- 🖌️ تصميم ومواقع ----
+ {n:"Looka", d:"شعار وهوية بصرية كاملة لعلامتك التجارية", u:"https://looka.com", c:"design", f:0},
+ {n:"Brandmark", d:"تصميم شعارات ذكي مع ألوان وهوية", u:"https://brandmark.io", c:"design", f:0},
+ {n:"Kittl", d:"تصميم جرافيك احترافي بأدوات AI متقدمة", u:"https://www.kittl.com", c:"design", f:0},
+ {n:"Uizard", d:"تصميم واجهات تطبيقات ومواقع من سكتش", u:"https://uizard.io", c:"design", f:0},
+ {n:"Relume", d:"بناء مواقع كاملة مع مكتبة مكونات ضخمة", u:"https://www.relume.io", c:"design", f:0},
+ {n:"Framer AI", d:"مواقع رائعة بتصميمات جاهزة خلال دقائق", u:"https://www.framer.com", c:"design", f:0},
+ {n:"Durable", d:"موقع كامل لنشاطك التجاري في 30 ثانية", u:"https://durable.co", c:"design", f:0},
+ {n:"10Web", d:"بناء واستضافة مواقع ووردبريس بالذكاء الاصطناعي", u:"https://10web.io", c:"design", f:0},
+ {n:"Designs.ai", d:"شعارات وفيديوهات ونصوص في منصة واحدة", u:"https://designs.ai", c:"design", f:0},
+ {n:"Zmo.ai", d:"صور منتجات ومحتوى تسويقي بالذكاء الاصطناعي", u:"https://zmo.ai", c:"design", f:0},
+ // ---- 🧍 أفاتار و3D ----
+ {n:"HeyGen", d:"فيديو بأفاتار يتكلم بأي لغة بصوتك", u:"https://www.heygen.com", c:"av3d", f:0},
+ {n:"Synthesia", d:"فيديوهات تدريبية بشخصيات افتراضية واقعية", u:"https://www.synthesia.io", c:"av3d", f:0},
+ {n:"D-ID", d:"إحياء الصور وتحريك الوجوه مع التحدث", u:"https://www.d-id.com", c:"av3d", f:0},
+ {n:"Colossyan", d:"فيديوهات تعليمية وسيناريوهات تدريب بالأفاتار", u:"https://www.colossyan.com", c:"av3d", f:0},
+ {n:"Captions", d:"تطبيق فيديو ذكي بأفاتار وترجمة تلقائية", u:"https://www.captions.ai", c:"av3d", f:0},
+ {n:"Ready Player Me", d:"أنشئ أفاتار 3D لنفسك للألعاب والعوالم الافتراضية", u:"https://readyplayer.me", c:"av3d", f:1},
+ {n:"Meshy", d:"توليد موديلات 3D من النص أو الصورة", u:"https://www.meshy.ai", c:"av3d", f:0},
+ {n:"Tripo AI", d:"تحويل صورة لموديل 3D جاهز خلال ثوانٍ", u:"https://www.tripo3d.ai", c:"av3d", f:0},
+ {n:"Sloyd", d:"توليد موديلات 3D للألعاب بأسلوب بسيط", u:"https://www.sloyd.ai", c:"av3d", f:0},
+ {n:"Hyper3D (Rodin)", d:"توليد موديلات 3D عالية الجودة من صورة", u:"https://hyper3d.ai", c:"av3d", f:0},
+];
+
+/* ================================================================
+   منطق التطبيق (JavaScript)
+   ================================================================ */
+
+/* اختصار للوصول للعناصر بالـ id */
+const $ = id => document.getElementById(id);
+
+/* المفضلة: تُحفظ في ذاكرة المتصفح (localStorage) حتى لا تضيع عند إغلاق الصفحة */
+let favs = JSON.parse(localStorage.getItem("aihub_favs") || "[]");
+let currentCat = null;  /* القسم المعروض حاليًا */
+let currentFilter = "all"; /* الفلتر الحالي داخل القسم: all أو free */
+
+/* ---------- وضع الأرقام الإحصائية في الصفحة الرئيسية ---------- */
+$("stTools").textContent = TOOLS.length;
+$("totalTools").textContent = TOOLS.length;
+$("stCats").textContent = Object.keys(CATS).length;
+
+/* ================================================================
+   دالة مساعدة: استخراج اسم النطاق من الرابط
+   مثال: "https://www.chatpdf.com/x" ← "chatpdf.com"
+   نستخدمه لجلب أيقونة الموقع (favicon) من جوجل
+   ================================================================ */
+const getDomain = url => url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0];
+
+/* ================================================================
+   دالة مساعدة: توليد لون ثابت لكل أداة من اسمها
+   لو الأيقونة ما اتحملت، نعرض أول حرف من اسم الأداة بلون مميز
+   ================================================================ */
+function avatarColor(name){
+  /* نحسب "بصمة" رقمية من حروف الاسم */
+  let h = 0;
+  for(let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  /* 4 تدرجات لونية نختار منها حسب البصمة */
+  const palettes = [
+    ["#6d5cff","#22d3ee"], ["#f472b6","#6d5cff"],
+    ["#22d3ee","#34d399"], ["#f59e0b","#f472b6"]
+  ];
+  return palettes[h % palettes.length];
+}
+
+/* ================================================================
+   بناء بطاقة أداة واحدة (HTML)
+   - صندوق أبيض فيه أيقونة الموقع الأصلية عبر خدمة جوجل
+   - لو الأيقونة فشلت في التحميل → نعرض أول حرف بألوان متدرجة (onerror)
+   - زر المفضلة يُربط عبر data-name (وليس داخل onclick) لتفادي
+     مشاكل أسماء الأدوات اللي فيها علامات اقتباس مثل "Let's Enhance"
+   ================================================================ */
+function toolCard(t){
+  const cat = CATS[t.c];
+  const isFav = favs.includes(t.n);
+  const [c1, c2] = avatarColor(t.n);
+  const ini = t.n.trim()[0].toUpperCase(); /* أول حرف من الاسم كحرف كبير */
+  return `<div class="tool">
+    <div class="top">
+      <div class="logo-box">
+        <img src="https://www.google.com/s2/favicons?domain=${getDomain(t.u)}&sz=128" alt="${t.n}" loading="lazy"
+             onerror="this.outerHTML='<div class=&quot;avatar&quot; style=&quot;background:linear-gradient(135deg,${c1},${c2})&quot;>${ini}</div>'">
+      </div>
+      <div><h4>${t.n}</h4><div class="catline">${cat.icon} ${cat.name}</div></div>
+    </div>
+    <p>${t.d}</p>
+    <div class="tags">
+      <span class="tag ${t.f ? "free" : "part"}">${t.f ? "✓ مجاني بالكامل" : "◐ خطة مجانية"}</span>
+    </div>
+    <div class="actions">
+      <a class="visit" href="${t.u}" target="_blank" rel="noopener">زيارة الموقع ↗</a>
+      <button class="fav ${isFav ? "on" : ""}" data-name="${t.n.replace(/"/g, "&quot;")}" title="مفضلة">${isFav ? "❤️" : "🤍"}</button>
+    </div>
+  </div>`;
+}
+
+/* ================================================================
+   عرض شبكة الأقسام في الصفحة الرئيسية
+   كل بطاقة تعرض: الأيقونة، الاسم، الوصف، وعدد الأدوات المجانية
+   ================================================================ */
+function renderCats(){
+  $("catCount").textContent = Object.keys(CATS).length + " أقسام";
+  $("catGrid").innerHTML = Object.entries(CATS).map(([key, c]) => {
+    const tools = TOOLS.filter(t => t.c === key);         /* كل أدوات القسم */
+    const freeCount = tools.filter(t => t.f).length;       /* المجانية منها */
+    return `<div class="cat" onclick="openCat('${key}')">
+      <div class="ic">${c.icon}</div>
+      <h3>${c.name}</h3><p>${c.desc}</p>
+      <div class="meta"><span>${tools.length} أداة · ${freeCount} مجانية بالكامل</span><span class="go">استكشف ←</span></div>
+    </div>`;
+  }).join("");
+}
+
+/* ================================================================
+   شريط الأقسام السريعة في أعلى الموقع — يتولّد تلقائيًا
+   فيه زر "الرئيسية" + زر لكل قسم، وأي قسم مفتوح يكون مضاءً
+   ================================================================ */
+function renderCatBar(){
+  let html = `<button class="pill ${currentCat === null ? "on" : ""}" onclick="goHome()">🏠 الرئيسية</button>`;
+  html += Object.entries(CATS).map(([key, c]) =>
+    `<button class="pill ${currentCat === key ? "on" : ""}" onclick="openCat('${key}')">${c.icon} ${c.name}</button>`
+  ).join("");
+  $("catBar").innerHTML = html;
+}
+
+/* ================================================================
+   عرض أدوات القسم الواحد — مع البحث الداخلي والفلتر
+   ================================================================ */
+function renderCatGrid(){
+  const q = $("catSearch").value.trim().toLowerCase();
+  /* نفلتر الأدوات: نفس القسم + تطابق البحث + تطابق نوع المجانية */
+  const list = TOOLS.filter(t =>
+    t.c === currentCat &&
+    (!q || t.n.toLowerCase().includes(q) || t.d.includes(q)) &&
+    (currentFilter === "all" || t.f === 1)
+  );
+  $("catCnt").textContent = list.length + " أداة";
+  $("catGrid").innerHTML = list.length
+    ? list.map(toolCard).join("")
+    : `<div class="empty">لا توجد نتائج مطابقة 🔍</div>`;
+  bindFavButtons(); /* نربط أزرار المفضلة بعد إعادة الرسم */
+}
+
+/* ================================================================
+   تغيير فلتر "الكل / مجاني بالكامل" داخل القسم
+   ================================================================ */
+function setFilter(f, btn){
+  currentFilter = f;
+  document.querySelectorAll(".fbtn").forEach(b => b.classList.remove("on"));
+  btn.classList.add("on");
+  renderCatGrid();
+}
+
+/* ================================================================
+   فتح قسم معيّن وعرض صفحته
+   ================================================================ */
+function openCat(key){
+  currentCat = key;
+  currentFilter = "all"; /* نرجع الفلتر لوضعه الافتراضي */
+  document.querySelectorAll(".fbtn").forEach(b => b.classList.toggle("on", b.dataset.f === "all"));
+  showView("cat");
+  $("catTitle").textContent = CATS[key].icon + " " + CATS[key].name;
+  $("catDesc").textContent = CATS[key].desc;
+  $("catSearch").value = "";
+  renderCatGrid();
+  renderCatBar(); /* نحدّث الإضاءة في شريط الأقسام */
+}
+
+/* ================================================================
+   صفحة المفضلة — تعرض الأدوات اللي ضغطت عليها ❤️
+   ================================================================ */
+function renderFavs(){
+  const list = TOOLS.filter(t => favs.includes(t.n));
+  $("favCnt").textContent = list.length + " أداة";
+  $("favBadge").textContent = favs.length; /* عدّاد زر القلب في الشريط العلوي */
+  $("favGrid").innerHTML = list.length
+    ? list.map(toolCard).join("")
+    : `<div class="empty">لسه مضفتش أدوات للمفضلة — اضغط على 🤍 في أي أداة ❤️</div>`;
+  bindFavButtons();
+}
+
+/* ================================================================
+   ربط أزرار المفضلة (تعمل بعد كل إعادة رسم للبطاقات)
+   نستخدم addEventListener مع data-name بدل onclick مباشرة
+   عشان أسماء زي "Let's Enhance" ما تكسرش الكود
+   ================================================================ */
+function bindFavButtons(){
+  document.querySelectorAll(".fav").forEach(btn => {
+    btn.onclick = () => toggleFav(btn.dataset.name);
+  });
+}
+
+/* ================================================================
+   إضافة/إزالة أداة من المفضلة + حفظها في المتصفح
+   ================================================================ */
+function toggleFav(name){
+  if(favs.includes(name)) favs = favs.filter(x => x !== name);
+  else favs.push(name);
+  localStorage.setItem("aihub_favs", JSON.stringify(favs));
+  /* نحدّث شكل الزر في كل البطاقات اللي اسمها نفس الاسم */
+  document.querySelectorAll(".fav").forEach(btn => {
+    if(btn.dataset.name === name){
+      const on = favs.includes(name);
+      btn.classList.toggle("on", on);
+      btn.textContent = on ? "❤️" : "🤍";
+    }
+  });
+  $("favBadge").textContent = favs.length;
+  /* لو كنا في صفحة المفضلة نعيد رسمها فورًا */
+  if($("view-fav").style.display !== "none") renderFavs();
+}
+
+/* ================================================================
+   أداة عشوائية — تفتح قسمها وتضيء عليها لتلفت الانتباه
+   ================================================================ */
+function randomTool(){
+  const t = TOOLS[Math.floor(Math.random() * TOOLS.length)];
+  openCat(t.c);
+  setTimeout(() => {
+    const card = [...document.querySelectorAll(".tool")]
+      .find(c => c.querySelector("h4").textContent === t.n);
+    if(card){
+      card.scrollIntoView({behavior: "smooth", block: "center"});
+      card.style.borderColor = "#22d3ee"; /* تظليل مؤقت */
+      setTimeout(() => card.style.borderColor = "", 2000);
+    }
+  }, 100);
+}
+
+/* ================================================================
+   التنقل بين الصفحات الثلاث: home / cat / fav
+   ================================================================ */
+function showView(v){
+  ["home", "cat", "fav"].forEach(x =>
+    $("view-" + x).style.display = x === v ? "block" : "none");
+  if(v === "fav") renderFavs();
+  window.scrollTo({top: 0});
+}
+function goHome(){
+  currentCat = null;
+  showView("home");
+  renderCatBar();
+  $("searchResults").style.display = "none"; /* نخفي نتائج البحث */
+  $("globalSearch").value = "";
+  $("navSearch").value = "";
+}
+
+/* ================================================================
+   البحث الشامل — يبحث في الأسماء والأوصاف وأسماء الأقسام
+   ويعرض النتائج في الصفحة الرئيسية
+   ================================================================ */
+function runSearch(q){
+  q = q.trim().toLowerCase();
+  const box = $("searchResults");
+  if(!q){ box.style.display = "none"; return; }
+  /* لو المستخدم في صفحة قسم أو مفضلة نرجعه للرئيسية أولًا */
+  if($("view-home").style.display === "none"){ currentCat = null; showView("home"); renderCatBar(); }
+  box.style.display = "block";
+  const list = TOOLS.filter(t =>
+    t.n.toLowerCase().includes(q) || t.d.includes(q) || CATS[t.c].name.includes(q)
+  );
+  $("searchCount").textContent = list.length + " نتيجة";
+  $("searchGrid").innerHTML = list.length
+    ? list.map(toolCard).join("")
+    : `<div class="empty">لا توجد نتائج — جرّب كلمة تانية 🔍</div>`;
+  bindFavButtons();
+}
+
+/* ربط البحث الكبير في الصفحة الرئيسية */
+$("globalSearch").addEventListener("input", e => {
+  runSearch(e.target.value);
+  if(e.target.value.trim()) $("searchResults").scrollIntoView({behavior: "smooth", block: "start"});
+});
+/* ربط البحث السريع في الشريط العلوي — يشتغل من أي صفحة */
+$("navSearch").addEventListener("input", e => runSearch(e.target.value));
+/* ربط البحث داخل القسم */
+$("catSearch").addEventListener("input", renderCatGrid);
+/* اختصار: الضغط على Enter في البحث ينقلك لنتائج البحث */
+$("navSearch").addEventListener("keydown", e => {
+  if(e.key === "Enter") $("searchResults").scrollIntoView({behavior: "smooth"});
+});
+
+/* زر العودة لأعلى الصفحة — يظهر بعد النزول 500 بكسل */
+window.addEventListener("scroll", () =>
+  $("toTop").classList.toggle("show", window.scrollY > 500));
+
+/* ================================================================
+   التشغيل الأول — نرسم كل شيء عند فتح الصفحة
+   ================================================================ */
+renderCats();
+renderCatBar();
+renderFavs();
+</script>
+</body>
+</html>
